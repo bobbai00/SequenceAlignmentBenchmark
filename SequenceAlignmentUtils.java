@@ -70,7 +70,6 @@ public class SequenceAlignmentUtils {
 
         // logging
         System.out.printf("Finish load the inputFile: %s\n", inputFilePath);
-        System.out.printf("s1: %s\ns2: %s\n", s1, s2);
       } catch (IOException e) {
         System.out.printf("Error happens in InputHandler constructor: %s\n", e);
       }
