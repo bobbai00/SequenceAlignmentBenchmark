@@ -96,19 +96,19 @@ public class SequenceAlignmentUtils {
 
 
   // delta, gap penalty
-  public int DELTA = 30;
+  static public int DELTA = 30;
 
-  public IOHandler ioHandler;
+  static public IOHandler ioHandler;
 
   // alpha, mismatch penalty
-  public int[][] ALPHA = {
+  static public int[][] ALPHA = {
       {0, 110, 48, 94},
       {110, 0, 118, 48},
       {48, 118, 0, 110},
       {94, 48, 110, 0}
   };
 
-  private int getIndexFromCharacter(char a) {
+  static private int getIndexFromCharacter(char a) {
     int idx;
     if (a == 'A') {
       idx = 0;
@@ -122,7 +122,7 @@ public class SequenceAlignmentUtils {
     return idx;
   }
 
-  public int getMismatchPenalty(char a, char b) {
+  static public int getMismatchPenalty(char a, char b) {
     return ALPHA[getIndexFromCharacter(a)][getIndexFromCharacter(b)];
   }
 
@@ -145,9 +145,24 @@ public class SequenceAlignmentUtils {
     return res;
   }
 
-  public void writeResultIntoOutputFile(int cost, String res1, String res2, double totalTimeMs,
+  static public void writeResultIntoOutputFile(int cost, String res1, String res2, double totalTimeMs,
                                         double totalMemUsageKb) throws IOException {
     ioHandler.writeIntoOutputFile(cost, res1, res2, totalTimeMs, totalMemUsageKb);
+  }
+
+  public static class AlignmentResult {
+    int optValue;
+
+    String s1;
+
+    String s2;
+
+    public AlignmentResult(int optValue, String s1, String s2) {
+      this.optValue = optValue;
+      this.s1 = s1;
+      this.s2 = s2;
+    }
+
   }
 
 

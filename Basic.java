@@ -40,18 +40,14 @@ public class Basic {
     }
   }
 
-  public static void main(String[] args) throws IOException {
-
-    // doing IO and string generation, we ignore the memory consumption and time of this part
-    SequenceAlignmentUtils sequenceAlignmentUtils = new SequenceAlignmentUtils(args[0], args[1]);
-
-    double beforeUsedMem= getMemoryInKB();
-    double startTime = getTimeInMilliseconds();
-
-    String[] baseString = sequenceAlignmentUtils.getBaseString();
-    String s1 = baseString[0];
-    String s2 = baseString[1];
-
+  public static int[] getCostArr(BasicMatchingPoint[][] dp) {
+    int[] res = new int[dp[0].length];
+    for (int i = 0; i<dp[0].length; i++) {
+      res[i] = dp[dp.length-1][i].penaltyValue;
+    }
+    return res;
+  }
+  public static SequenceAlignmentUtils.AlignmentResult basicDP(String s1, String s2) {
     int n = s1.length()+1;
     int m = s2.length()+1;
     BasicMatchingPoint[][] dp = new BasicMatchingPoint[n][m];
@@ -59,11 +55,11 @@ public class Basic {
     // initialization
     dp[0][0] = new BasicMatchingPoint((byte) 0, (byte) 0, 0);
     for (int i = 1; i < n; i++) {
-      dp[i][0] = new BasicMatchingPoint((byte) 2, (byte) 3, i * sequenceAlignmentUtils.DELTA);
+      dp[i][0] = new BasicMatchingPoint((byte) 2, (byte) 3, i * SequenceAlignmentUtils.DELTA);
     }
     for (int i = 1; i < m; i++) {
       dp[0][i] = new BasicMatchingPoint((byte) 2, (byte) 2,
-          i * sequenceAlignmentUtils.DELTA);
+              i * SequenceAlignmentUtils.DELTA);
     }
 
     for (int i = 1; i < n; i++) {
@@ -71,9 +67,9 @@ public class Basic {
       for (int j = 1; j < m; j++) {
         char c2 = s2.charAt(j-1);
 
-        int val1 = sequenceAlignmentUtils.getMismatchPenalty(c1, c2) + dp[i-1][j-1].penaltyValue;
-        int val2 = sequenceAlignmentUtils.DELTA + dp[i][j-1].penaltyValue;
-        int val3 = sequenceAlignmentUtils.DELTA + dp[i-1][j].penaltyValue;
+        int val1 = SequenceAlignmentUtils.getMismatchPenalty(c1, c2) + dp[i-1][j-1].penaltyValue;
+        int val2 = SequenceAlignmentUtils.DELTA + dp[i][j-1].penaltyValue;
+        int val3 = SequenceAlignmentUtils.DELTA + dp[i-1][j].penaltyValue;
         byte minStep = 1;
         int minVal = val1;
         if (minVal > val2) {
@@ -128,12 +124,25 @@ public class Basic {
       p += prevStep[1];
       q += prevStep[2];
     }
+//    int[] costArr = getCostArr(dp);
+    return new SequenceAlignmentUtils.AlignmentResult(optValue, resS1.toString(), resS2.toString());
+  }
+  public static void main(String[] args) throws IOException {
+
+    // doing IO and string generation, we ignore the memory consumption and time of this part
+    SequenceAlignmentUtils sequenceAlignmentUtils = new SequenceAlignmentUtils(args[0], args[1]);
+
+    double beforeUsedMem= getMemoryInKB();
+    double startTime = getTimeInMilliseconds();
+
+    String[] baseString = sequenceAlignmentUtils.getBaseString();
+    SequenceAlignmentUtils.AlignmentResult res = basicDP(baseString[0], baseString[1]);
 
     double afterUsedMem = getMemoryInKB();
     double endTime = getTimeInMilliseconds();
     double totalMemUsageKb =  afterUsedMem-beforeUsedMem;
     double totalTimeMs =  endTime - startTime;
-    sequenceAlignmentUtils.writeResultIntoOutputFile(optValue, resS1.toString(), resS2.toString(),
+    SequenceAlignmentUtils.writeResultIntoOutputFile(res.optValue, res.s1, res.s2,
         totalTimeMs,
         totalMemUsageKb);
   }
