@@ -88,6 +88,7 @@ public class Efficient {
         // divide and conquer
         AlignmentResult resL = efficientDP(xl, yl);
         AlignmentResult resR = efficientDP(xr, yr);
+
         return new AlignmentResult(resL.optValue + resR.optValue, resL.s1 + resR.s1, resL.s2 + resR.s2);
     }
     public static void main(String[] args) throws IOException {
@@ -104,6 +105,7 @@ public class Efficient {
         double endTime = getTimeInMilliseconds();
         double totalMemUsageKb =  afterUsedMem-beforeUsedMem;
         double totalTimeMs =  endTime - startTime;
+
         SequenceAlignmentUtils.writeResultIntoOutputFile(res.optValue, res.s1, res.s2, totalTimeMs, totalMemUsageKb);
     }
 }

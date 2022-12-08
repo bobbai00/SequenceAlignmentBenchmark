@@ -18,3 +18,13 @@ For example:
 ```shell
 bash basic.sh SampleTestCases/input2.txt ./output.txt
 ```
+
+3. To run `Efficient` Algorithm, use `Efficient.sh` as follows:
+```shell
+bash efficient.sh $(InputFilePath) $(OutputFilePath)
+```
+
+For example:
+```shell
+bash efficient.sh SampleTestCases/input2.txt ./output.txt
+```
